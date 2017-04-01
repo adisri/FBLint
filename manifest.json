@@ -7,7 +7,7 @@
       "matches": [
         "https://www.facebook.com/*"
       ],
-      "js": ["content.js"]
+      "js": ["jquery-3.2.1.min.js", "content.js"]
     }
   ]
 }

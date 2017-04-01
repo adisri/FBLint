@@ -46,7 +46,7 @@ function sendAlert() {
 	}).then(function () {
 		// TODO: send message
 		swal(
-	    'Deleted!',
+	    'Sent!',
 	    'Your message has been sent.',
 	    'success'
 	  )

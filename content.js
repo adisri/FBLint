@@ -1,5 +1,3 @@
-
-
 function setUpEventListener(){
 	var $node = $('div._5rpb');
 	console.log($node);
@@ -19,8 +17,8 @@ function setUpEventListener(){
 					console.log("period");
 					break;
 				case 13:
-					console.log("enter");
-					//event.preventDefault();
+					console.log("enter"); // TODO: suppress newline
+					sendAlert();
 					break;
 			}
 			console.log("here");
@@ -32,10 +30,32 @@ function setUpEventListener(){
 	}
 }
 
+function sendAlert() {
+	swal({
+	  title: 'Are you sure?',
+	  text: "This message could be hurtful. Are you sure you want to send it?",
+	  type: 'warning',
+	  showCancelButton: true,
+	  confirmButtonColor: '#3085d6',
+	  cancelButtonColor: '#d33',
+	  confirmButtonText: "Yes, I'm sure.",
+	  cancelButtonText: 'No, cancel!',
+	  confirmButtonClass: 'btn btn-success',
+	  cancelButtonClass: 'btn btn-danger',
+	  buttonsStyling: true
+	}).then(function () {
+		// TODO: send message
+		swal(
+	    'Deleted!',
+	    'Your message has been sent.',
+	    'success'
+	  )
+	}, function (dismiss) {
+		// Nothing to do if cancel was hit
+	})
+}
+
 $(document).ready(function() {
     console.log("ready!");
     setUpEventListener();
 });
-
-
-

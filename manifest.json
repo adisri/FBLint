@@ -1,0 +1,13 @@
+{
+  "manifest_version": 2,
+  "name": "FBLint",
+  "version": "0.1",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.facebook.com/*"
+      ],
+      "js": ["content.js"]
+    }
+  ]
+}

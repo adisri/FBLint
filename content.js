@@ -1,11 +1,15 @@
 
 
 function setUpEventListener(){
-	var $node = $('div._kmc');
+	var $node = $('div._5rpb');
 	console.log($node);
 	if($node) {
 		var $newNode = $node.clone(true);
 		console.log($newNode);
+		var $placeholderNode = getElementsStartsWithId('placeholder');
+		if($placeholderNode)
+			$placeholderNode.remove();
+
 
 		$newNode.keyup(function(event){
 			// api call here 190
@@ -25,6 +29,17 @@ function setUpEventListener(){
 
 		$node.replaceWith($newNode);
 	}
+}
+
+function getElementsStartsWithId( id ) {
+  var children = document.body.getElementsByTagName('div');
+  var child;
+  for (var i = 0, length = children.length; i < length; i++) {
+    child = children[i];
+    if (child.id.substr(0, id.length) == id)
+      return child;
+  }
+  return null;
 }
 
 $(document).ready(function() {

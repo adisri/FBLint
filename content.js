@@ -4,11 +4,10 @@ function setUpEventListener(){
 	$(document).keyup(function(event){
 		var $node = $("span[data-text='true']");
 		if ($node) {
-			if (event.keyCode === 190) { // period key
-				var sendRequestTextAnalytics = 
+			if (event.keyCode === 190 || (event.keyCode === 191 && event.shiftKey) || (event.keyCode === 49 && event.shiftKey)) { // period, question mark, exclamation
+				var sendRequestTextAnalytics =
 					sendRequestGenerator('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', textAnalyticsSuccessFunction, config.TEXT_API_KEY);
-				sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '1','text': 'You are a terrible human being.' }]}");
-
+				sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '1','text':" + $node.text() + "}]}");
 				sendAlert();
 			}
 		}

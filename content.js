@@ -1,27 +1,53 @@
+var textAnalyticsScore = null;
+
 function setUpEventListener(){
 	$(document).keyup(function(event){
 		var $node = $("span[data-text='true']");
 		if ($node) {
 			if (event.keyCode === 190) { // period key
-				sendRequest();
+				var sendRequestTextAnalytics = 
+					sendRequestGenerator('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', textAnalyticsSuccessFunction);
+				sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '1','text': 'You are a terrible human being.' }]}");
+
 				sendAlert();
 			}
 		}
 	});
 }
 
-function sendRequest() {
-	jQuery.ajax({
-		url : 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment',
-		type: 'POST',
-		contentType: 'application/json',
-		headers: {'Ocp-Apim-Subscription-Key': config.API_KEY},
-		data: "{'documents': [{'language': 'en','id': '1','text': 'You are a terrible human being.' }]}",
-		success: function(data, textStatus, jqXHR) {
-			console.log(data);
-		}
-	});
+function textAnalyticsSuccessFunction(data, textStatus, jqXHR){
+	console.log(data);
+	console.log(data.documents[0].score);
+	textAnalyticsScore = data.documents[0].score;
 }
+
+function sendRequestGenerator(API_URL, successFunction){
+	return function(inputText){
+		jQuery.ajax({
+			url : API_URL,
+			type: 'POST',
+			contentType: 'application/json',
+			headers: {'Ocp-Apim-Subscription-Key': config.API_KEY},
+			data: inputText,
+			success: successFunction
+		});
+	}
+}
+
+// function sendRequestTextAnalytics() {
+// 	jQuery.ajax({
+// 		url : 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment',
+// 		type: 'POST',
+// 		contentType: 'application/json',
+// 		headers: {'Ocp-Apim-Subscription-Key': config.API_KEY},
+// 		data: "{'documents': [{'language': 'en','id': '1','text': 'You are a terrible human being.' }]}",
+// 		success: function(data, textStatus, jqXHR) {
+// 			console.log(data);
+// 			console.log(data.documents[0].score);
+// 			textAnalyticsScore = data.documents[0].score;
+// 		}
+// 	});
+// }
 
 function sendAlert() {
 	swal({

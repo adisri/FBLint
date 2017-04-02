@@ -1,5 +1,5 @@
-var textAnalyticsScore = null;
 var dandelionScore = null;
+var textAnalyticsScore = null;
 
 function setUpEventListener(){
 	$(document).keyup(function(event){
@@ -7,26 +7,46 @@ function setUpEventListener(){
 		if ($node) {
 			var nodeText = $node.text();
 			if (event.keyCode === 190 || (event.keyCode === 191 && event.shiftKey) || (event.keyCode === 49 && event.shiftKey)) { // period, question mark, exclamation
-				var sendRequestTextAnalytics =
-					sendRequestGenerator('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', textAnalyticsSuccessFunction, config.TEXT_API_KEY);
-				sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '2','text':'" + nodeText + "'}]}");
-				sendDandelionRequest(nodeText);
-				sendAlert();
+
+				sendRequests(nodeText);
 			}
 		}
 	});
 }
 
-function sendDandelionRequest(nodeText) {
+function weightedScore(){
+	if(textAnalyticsScore === null && dandelionScore === null){
+		return 0;
+	} else if(textAnalyticsScore === null){
+		return dandelion;
+	} else if(dandelionScore === null){
+		return textAnalyticsScore - 0.3;
+	} else{
+		return dandelionScore + textAnalyticsScore;
+	}
+}
+
+function sendRequests(nodeText) {
+	// send dendelion request
 	var encodedText = encodeURI(nodeText)
 	var url = "https://api.dandelion.eu/datatxt/sent/v1/?lang=en&text=" + encodedText + "&token=" + config.DANDELION_API_KEY;
 	$.get(url, function(data) {
 		dandelionScore = data.sentiment.score;
+
+		// send microsoft sentiment analysis request
+		var sendRequestTextAnalytics =
+			sendRequestGenerator('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', textAnalyticsSuccessFunction, config.TEXT_API_KEY);
+		sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '2','text':'" + nodeText + "'}]}");
 	})
 }
 
 function textAnalyticsSuccessFunction(data, textStatus, jqXHR) {
 	textAnalyticsScore = data.documents[0].score;
+	console.log(textAnalyticsScore);
+	console.log(dandelionScore);
+	console.log(weightedScore());
+	if(weightedScore() < 0)
+		sendAlert();
 }
 
 function sendRequestGenerator(API_URL, successFunction, API_KEY){

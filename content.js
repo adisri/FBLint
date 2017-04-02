@@ -21,7 +21,7 @@ function weightedScore() {
 	} else if(dandelionScore === null){
 		return textAnalyticsScore - 0.3;
 	} else{
-		return dandelionScore/2 + textAnalyticsScore;
+		return dandelionScore + textAnalyticsScore;
 	}
 }
 
@@ -37,16 +37,23 @@ function sendRequests(nodeText) {
 			sendRequestGenerator('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', textAnalyticsSuccessFunction, config.TEXT_API_KEY);
 		sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '2','text':'" + nodeText.replace(/'/g, "\\'") + "'}]}");
 	})
+
+	function textAnalyticsSuccessFunction(data, textStatus, jqXHR) {
+		textAnalyticsScore = data.documents[0].score;
+		console.log('Input: ' + nodeText);
+		console.log('Microsoft (0 to 1): ' + textAnalyticsScore);
+		console.log('DandelionScore (-1 to 1): ' + dandelionScore);
+		console.log('Sum: ' + weightedScore());
+
+		if(weightedScore() < 0){
+			console.log('FLAGGED!');
+			sendAlert();
+		}
+		console.log('--------------------------------------------------');
+	}
 }
 
-function textAnalyticsSuccessFunction(data, textStatus, jqXHR) {
-	textAnalyticsScore = data.documents[0].score;
-	console.log(textAnalyticsScore);
-	console.log(dandelionScore);
-	console.log(weightedScore());
-	if(weightedScore() < 0)
-		sendAlert();
-}
+
 
 function sendRequestGenerator(API_URL, successFunction, API_KEY) {
 	return function(inputText){

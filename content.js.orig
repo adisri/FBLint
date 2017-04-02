@@ -7,11 +7,16 @@ function setUpEventListener(){
 			if (event.keyCode === 190 || (event.keyCode === 191 && event.shiftKey) || (event.keyCode === 49 && event.shiftKey)) { // period, question mark, exclamation
 				var sendRequestTextAnalytics =
 					sendRequestGenerator('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', textAnalyticsSuccessFunction, config.TEXT_API_KEY);
-				//sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '1','text':" + $node.text() + "}]}");
-				var sendRequestLinguistics =
+<<<<<<< HEAD
+				sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '1','text':" + $node.text() + "}]}");
+=======
+				// sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '1','text': 'You are a terrible human being.' }]}");
+
+				var sendRequestLinguistics = 
 					sendRequestGenerator('https://westus.api.cognitive.microsoft.com/linguistics/v1.0/analyze', linguisticsSuccessFunction, config.LINGUISTICS_API_KEY);
 				sendRequestLinguistics("{'documents': [{'language': 'en','id': '2','text': 'You are a terrible human being.' }]}");
 
+>>>>>>> d4f8f1b7512e2d9cf8acd64cbcd55e066b0f604f
 				sendAlert();
 			}
 		}

@@ -1,23 +1,31 @@
 var textAnalyticsScore = null;
+var dandelionScore = null;
 
 function setUpEventListener(){
 	$(document).keyup(function(event){
 		var $node = $("span[data-text='true']");
 		if ($node) {
-			console.log($node.text());
+			var nodeText = $node.text();
 			if (event.keyCode === 190 || (event.keyCode === 191 && event.shiftKey) || (event.keyCode === 49 && event.shiftKey)) { // period, question mark, exclamation
 				var sendRequestTextAnalytics =
 					sendRequestGenerator('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', textAnalyticsSuccessFunction, config.TEXT_API_KEY);
-				sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '2','text':'" + $node.text() + "'}]}");
+				sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '2','text':'" + nodeText + "'}]}");
+				sendDandelionRequest(nodeText);
 				sendAlert();
 			}
 		}
 	});
 }
 
-function textAnalyticsSuccessFunction(data, textStatus, jqXHR){
-	console.log(data);
-	console.log(data.documents[0].score);
+function sendDandelionRequest(nodeText) {
+	var encodedText = encodeURI(nodeText)
+	var url = "https://api.dandelion.eu/datatxt/sent/v1/?lang=en&text=" + encodedText + "&token=" + config.DANDELION_API_KEY;
+	$.get(url, function(data) {
+		dandelionScore = data.sentiment.score;
+	})
+}
+
+function textAnalyticsSuccessFunction(data, textStatus, jqXHR) {
 	textAnalyticsScore = data.documents[0].score;
 }
 

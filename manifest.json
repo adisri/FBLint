@@ -10,5 +10,6 @@
       "js": ["jquery-3.2.1.min.js", "sweetalert2.min.js", "content.js", "config.js"],
       "css": ["sweetalert2.min.css"]
     }
-  ]
+  ],
+  "permissions": ["<all_urls>"]
 }

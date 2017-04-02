@@ -3,8 +3,22 @@ function setUpEventListener(){
 		var $node = $("span[data-text='true']");
 		if ($node) {
 			if (event.keyCode === 190) { // period key
+				sendRequest();
 				sendAlert();
 			}
+		}
+	});
+}
+
+function sendRequest() {
+	jQuery.ajax({
+		url : 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment',
+		type: 'POST',
+		contentType: 'application/json',
+		headers: {'Ocp-Apim-Subscription-Key': config.API_KEY},
+		data: "{'documents': [{'language': 'en','id': '1','text': 'You are a terrible human being.' }]}",
+		success: function(data, textStatus, jqXHR) {
+			console.log(data);
 		}
 	});
 }

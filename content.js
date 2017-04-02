@@ -6,7 +6,7 @@ function setUpEventListener(){
 		if ($node) {
 			if (event.keyCode === 190) { // period key
 				var sendRequestTextAnalytics = 
-					sendRequestGenerator('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', textAnalyticsSuccessFunction);
+					sendRequestGenerator('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', textAnalyticsSuccessFunction, config.TEXT_API_KEY);
 				sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '1','text': 'You are a terrible human being.' }]}");
 
 				sendAlert();
@@ -21,13 +21,13 @@ function textAnalyticsSuccessFunction(data, textStatus, jqXHR){
 	textAnalyticsScore = data.documents[0].score;
 }
 
-function sendRequestGenerator(API_URL, successFunction){
+function sendRequestGenerator(API_URL, successFunction, API_KEY){
 	return function(inputText){
 		jQuery.ajax({
 			url : API_URL,
 			type: 'POST',
 			contentType: 'application/json',
-			headers: {'Ocp-Apim-Subscription-Key': config.TEXT_API_KEY},
+			headers: {'Ocp-Apim-Subscription-Key': API_KEY},
 			data: inputText,
 			success: successFunction
 		});

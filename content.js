@@ -15,7 +15,7 @@ function sendRequest() {
 		url : 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment',
 		type: 'POST',
 		contentType: 'application/json',
-		headers: {'Ocp-Apim-Subscription-Key': config.API_KEY},
+		headers: {'Ocp-Apim-Subscription-Key': config.TEXT_API_KEY},
 		data: "{'documents': [{'language': 'en','id': '1','text': 'You are a terrible human being.' }]}",
 		success: function(data, textStatus, jqXHR) {
 			console.log(data);

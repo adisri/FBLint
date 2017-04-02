@@ -27,7 +27,7 @@ function sendRequestGenerator(API_URL, successFunction){
 			url : API_URL,
 			type: 'POST',
 			contentType: 'application/json',
-			headers: {'Ocp-Apim-Subscription-Key': config.API_KEY},
+			headers: {'Ocp-Apim-Subscription-Key': config.TEXT_API_KEY},
 			data: inputText,
 			success: successFunction
 		});

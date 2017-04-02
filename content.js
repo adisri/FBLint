@@ -7,7 +7,11 @@ function setUpEventListener(){
 			if (event.keyCode === 190) { // period key
 				var sendRequestTextAnalytics = 
 					sendRequestGenerator('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', textAnalyticsSuccessFunction, config.TEXT_API_KEY);
-				sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '1','text': 'You are a terrible human being.' }]}");
+				// sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '1','text': 'You are a terrible human being.' }]}");
+
+				var sendRequestLinguistics = 
+					sendRequestGenerator('https://westus.api.cognitive.microsoft.com/linguistics/v1.0/analyze', linguisticsSuccessFunction, config.LINGUISTICS_API_KEY);
+				sendRequestLinguistics("{'documents': [{'language': 'en','id': '2','text': 'You are a terrible human being.' }]}");
 
 				sendAlert();
 			}
@@ -21,8 +25,8 @@ function textAnalyticsSuccessFunction(data, textStatus, jqXHR){
 	textAnalyticsScore = data.documents[0].score;
 }
 
-function languisticsSuccessFunction(data, textStatus, jqXHR){
-	
+function linguisticsSuccessFunction(data, textStatus, jqXHR){
+	console.log('hit here');
 }
 
 function sendRequestGenerator(API_URL, successFunction, API_KEY){

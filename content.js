@@ -1,20 +1,19 @@
 var dandelionScore = null;
 var textAnalyticsScore = null;
 
-function setUpEventListener(){
+function setUpEventListener() {
 	$(document).keyup(function(event){
 		var $node = $("span[data-text='true']");
 		if ($node) {
 			var nodeText = $node.text();
 			if (event.keyCode === 190 || (event.keyCode === 191 && event.shiftKey) || (event.keyCode === 49 && event.shiftKey)) { // period, question mark, exclamation
-
 				sendRequests(nodeText);
 			}
 		}
 	});
 }
 
-function weightedScore(){
+function weightedScore() {
 	if(textAnalyticsScore === null && dandelionScore === null){
 		return 0;
 	} else if(textAnalyticsScore === null){
@@ -22,7 +21,7 @@ function weightedScore(){
 	} else if(dandelionScore === null){
 		return textAnalyticsScore - 0.3;
 	} else{
-		return dandelionScore + textAnalyticsScore;
+		return dandelionScore/2 + textAnalyticsScore;
 	}
 }
 
@@ -36,7 +35,7 @@ function sendRequests(nodeText) {
 		// send microsoft sentiment analysis request
 		var sendRequestTextAnalytics =
 			sendRequestGenerator('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', textAnalyticsSuccessFunction, config.TEXT_API_KEY);
-		sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '2','text':'" + nodeText + "'}]}");
+		sendRequestTextAnalytics("{'documents': [{'language': 'en','id': '2','text':'" + nodeText.replace(/'/g, "\\'") + "'}]}");
 	})
 }
 
@@ -49,7 +48,7 @@ function textAnalyticsSuccessFunction(data, textStatus, jqXHR) {
 		sendAlert();
 }
 
-function sendRequestGenerator(API_URL, successFunction, API_KEY){
+function sendRequestGenerator(API_URL, successFunction, API_KEY) {
 	return function(inputText){
 		jQuery.ajax({
 			url : API_URL,
